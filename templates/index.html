@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Главная страница</title>
+</head>
+<body>
+<div>
+    <ul>
+        <li><a href="#">Главная</a></li>
+        <li><a href="/about/">О нас</a></li>
+        <li><a href="/contacts/">Контакты</a></li>
+    </ul>
+</div>
+
+<hr>
+
+<h1>Мы торгово-производственная компания <b>{{name_company}}</b></h1>
+<div>
+</div>
+<p><h2>Реализуем:</h2></p>
+{% for product in products %}
+    <p><li>{{ product }}</li></p>
+{% endfor %}
+</body>
+</html>
