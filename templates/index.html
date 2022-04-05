@@ -1,26 +1,13 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Главная страница</title>
-</head>
-<body>
-<div>
-    <ul>
-        <li><a href="#">Главная</a></li>
-        <li><a href="/about/">О нас</a></li>
-        <li><a href="/contacts/">Контакты</a></li>
-    </ul>
-</div>
+{% extends 'basetemplate.html' %}
 
-<hr>
+{% block title %}Главная страница{% endblock %}
 
-<h1>Мы торгово-производственная компания <b>{{name_company}}</b></h1>
-<div>
-</div>
-<p><h2>Реализуем:</h2></p>
-{% for product in products %}
-    <p><li>{{ product }}</li></p>
-{% endfor %}
-</body>
-</html>
+{% block content %}
+    <h1 class="pt-5">Мы торгово-производственная компания</h1>
+    <p><h3><b>{{ name_company }}</b></h3></p>
+    <hr>
+    <div>
+    </div>
+    <p><h2 class="pt-3 pb-5">Наша продукция:</h2></p>
+    {% include 'includes/inc_goods_block.html' %}
+{% endblock %}

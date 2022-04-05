@@ -32,6 +32,7 @@ class Application:
             data = Post().get_request_params(environ)
             request['data'] = data
             print(f'Пришёл post-запрос: {Application.decode_value(data)}')
+
         if method == 'GET':
             request_params = Get().get_request_params(environ)
             request['request_params'] = request_params

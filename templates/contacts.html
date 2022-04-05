@@ -1,26 +1,24 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Контакты</title>
-</head>
-<body>
-    <div>
-        <ul>
-        <li><a href="/">Главная</a></li>
-        <li><a href="/about/">О нас</a></li>
-        <li><a href="/contacts/">Контакты</a></li>
-        </ul>
+{% extends 'basetemplate.html' %}
+
+{% block title %}Контакты{% endblock %}
+
+{% block content %}
+    <h1 class="pt-5 pb-5">Отправить нам сообщение</h1>
+    <div class="col-4">
+        <form method="post" class="">
+            <p><label class="col-12">Заголовок
+                <input class="col-12" type="text" name="title">
+            </label></p>
+            <p><label class="col-12">Ваш email
+                <input class="col-12" type="email" name="email">
+            </label></p>
+            <p><label class="col-12"> Текст сообщения
+                <textarea class="col-12" type="text" name="text"></textarea>
+            </label></p>
+            <p>
+                <button class="btn btn-primary col-12" type="submit">Отправить</button>
+            </p>
+        </form>
     </div>
 
-    <hr>
-<h1>Отправить нам сообщение</h1>
-
-    <form method="post">
-        <input type="text" name="title" placeholder="Заголовок">
-        <input type="text" name="text" placeholder="Текст сообщения">
-        <input type="email" name="email" placeholder="email">
-		<button type="submit">Отправить</button>
-    </form>
-</body>
-</html>
+{% endblock %}

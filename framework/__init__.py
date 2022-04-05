@@ -1,3 +1,3 @@
 from framework.core import Application
-from framework.templates import render
+from framework.templator import render
 

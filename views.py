@@ -1,4 +1,4 @@
-from framework.templates import render
+from framework.templator import render
 
 
 def index_view(request):

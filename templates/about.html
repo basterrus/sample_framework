@@ -1,29 +1,19 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>О нас</title>
-</head>
-<body>
-    <div>
-        <ul>
-        <li><a href="/">Главная</a></li>
-        <li><a href="/about/">О нас</a></li>
-        <li><a href="/contacts/">Контакты</a></li>
-        </ul>
+{% extends 'basetemplate.html' %}
+
+{% block title %}О нас{% endblock %}
+{% block content %}
+    <div class="pt-5">
+
+        <h1>Страница о нас</h1>
+
+        <div>
+            <ul>
+                <li class="fs-5">{{ name_company }}</li>
+                <li class="fs-5">{{ address }}</li>
+                <li class="fs-5">{{ phone }}</li>
+                <li class="fs-5">{{ time }}</li>
+            </ul>
+        </div>
+
     </div>
-
-    <hr>
-
-<h1>Страница о нас</h1>
-
-<div>
-    <ul>
-        <li>{{ name_company }}</li>
-        <li>{{ address }}</li>
-        <li>{{ phone }}</li>
-        <li>{{ time }}</li>
-    </ul>
-</div>
-</body>
-</html>
+{% endblock %}
