@@ -16,7 +16,18 @@ def about_view(request):
 
 
 def contact_view(request):
-    return '200 OK', render('contacts.html')
+    if request.get('method') == 'POST':
+
+        data = request['data']
+        title = data['title']
+        text = data['text']
+        email = data['email']
+
+        print(f'Пришло сообщение от {email} тема: {title} текст: {text}')
+
+        return '200 OK', render('contacts.html')
+    else:
+        return '200 OK', render('contacts.html')
 
 
 def not_found_404_view(request):

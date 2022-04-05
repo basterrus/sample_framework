@@ -10,7 +10,7 @@ routes = {
 
 
 def secret_front(request):
-    request['data'] = date.today()
+    request['todata'] = date.today()
 
 
 def other_front(request):
