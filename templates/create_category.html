@@ -1,0 +1,15 @@
+{% extends "basetemplate.html" %}
+
+{% block title %}Добавить категорию{% endblock %}
+
+{% block style %}{% include "includes/inc_style_css.html" %}{% endblock %}
+
+{% block menu %}{% include "includes/inc_menu.html" %}{% endblock %}
+
+{% block content %}
+    <h1 class="pt-5">Создание категории</h1>
+    <form method="post" class="mt-5">
+        <input type="text" name="name" placeholder="Название" class="col-4">
+        <button type="submit" class="btn btn-primary">Сохранить</button>
+    </form>
+{% endblock %}

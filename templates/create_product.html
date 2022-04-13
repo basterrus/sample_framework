@@ -1,0 +1,18 @@
+{% extends "basetemplate.html" %}
+
+{% block title %}Добавить категорию{% endblock %}
+
+{% block style %}{% include "includes/inc_style_css.html" %}{% endblock %}
+
+{% block menu %}{% include "includes/inc_menu.html" %}{% endblock %}
+
+{% block content %}
+    <h1 class="pt-5">Создание товара</h1>
+    <form method="post" class="mt-5">
+        <p><input type="text" name="name" placeholder="Название товара" class="col-4"></p>
+{#        <p><input type="text" name="category" placeholder="Название категории" class="col-4"></p>#}
+        <button type="submit" class="btn btn-primary col-4">Сохранить</button>
+{#        <a class="btn btn-primary" href="/products/add/?id={{id}}">Создать товар</a>#}
+
+    </form>
+{% endblock %}

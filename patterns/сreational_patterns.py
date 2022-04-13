@@ -17,38 +17,8 @@ class Seller(User):
     pass
 
 
-class ProductPrototype:
-    """Класс прототип продукта"""
-
-    def clone(self):
-        return deepcopy(self)
-
-
-class ProductType(ProductPrototype):
-    """Класс продукта"""
-
-    def __init__(self, name, category):
-        self.name = name
-        self.category = category
-        self.category.courses.append(self)
-
-
-class Product:
-    """Класс абстрактного продукта"""
-    pass
-
-
-class ProductFactory:
-    types = {
-        'product': Product,
-    }
-
-    @classmethod
-    def create(cls, type_, name, category):
-        return cls.types[type_](name, category)
-
-
 class UserFactory:
+    """Фабрика """
     types = {
         'buyer': Buyer,
         'seller': Seller
@@ -57,6 +27,37 @@ class UserFactory:
     @classmethod
     def create(cls, type_):
         return cls.types[type_]()
+
+
+class ProductPrototype:
+    """Класс прототип продукта"""
+
+    def clone(self):
+        return deepcopy(self)
+
+
+class Product(ProductPrototype):
+    """Класс продукта"""
+
+    def __init__(self, name, category):
+        self.name = name
+        self.category = category
+        self.category.products.append(self)
+
+
+class AbstractProduct(Product):
+    """Класс абстрактного продукта"""
+    pass
+
+
+class ProductFactory:
+    types = {
+        'product': AbstractProduct
+    }
+
+    @classmethod
+    def create(cls, type_, name, category):
+        return cls.types[type_](name, category)
 
 
 class Category:
@@ -69,12 +70,12 @@ class Category:
         Category.auto_id += 1
         self.name = name
         self.category = category
-        self.courses = []
+        self.products = []
 
-    def course_count(self):
-        result = len(self.courses)
+    def product_count(self):
+        result = len(self.products)
         if self.category:
-            result += self.category.course_count()
+            result += self.category.product_count()
         return result
 
 
@@ -84,8 +85,8 @@ class Engine:
     def __init__(self):
         self.sellers = []
         self.buyers = []
-        self.categories = []
         self.products = []
+        self.categories = []
 
     @staticmethod
     def create_user(type_):
@@ -107,16 +108,16 @@ class Engine:
         return ProductFactory.create(type_, name, category)
 
     def get_product(self, name):
-        for product in self.products:
-            if product.name == name:
-                return product
+        for product_ in self.products:
+            if product_.name == name:
+                return product_
         return None
 
     def get_product_by_id(self, id):
-        for product in self.products:
-            print("product", product.id)
-            if product.id == id:
-                return product
+        for product_ in self.products:
+            print("product", product_.id)
+            if product_.id == id:
+                return product_
         raise Exception(f'Продукт с заданным id= {id} не найден!')
 
     @staticmethod
@@ -153,4 +154,4 @@ class Logger(metaclass=SingletonByName):
 
     @staticmethod
     def log(text):
-        print('log--->', text)
+        print('log->', text)

@@ -1,0 +1,40 @@
+{% extends "basetemplate.html" %}
+
+{% block title %}Список категорий товаров{% endblock %}
+
+{% block style %}{% include "includes/inc_style_css.html" %}{% endblock %}
+
+{% block menu %}{% include "includes/inc_menu.html" %}{% endblock %}
+
+{% block content %}
+    <h1 class="pt-5">Список товаров категории {{ name }}</h1>
+
+    <table class="table mt-5">
+        <thead>
+        <tr>
+            <th scope="col">ID Категориии</th>
+            <th scope="col">Наименование товара</th>
+            <th scope="col"></th>
+            <th scope="col">Handle</th>
+        </tr>
+        </thead>
+        {% for item in objects_list %}
+            <tr>
+                <th scope="row">{{ item.id }}</th>
+                <td>{{ item.name }}</td>
+                <td><p><a href="/products/copy/?name={{item.name}}" class="btn btn-info">Копировать товар</a></p> </td>
+                <td>
+                    <button class="btn btn-danger"><a class="text-white text-decoration-none"
+                                                      href="#">Удалить</a></button>
+                </td>
+            </tr>
+        {% endfor %}
+    </table>
+
+
+    <div class="d-flex">
+        <p><a href="/" class="btn btn-info">Главная</a></p> 
+        <p><a href="/products/add/?id={{id}}" class="btn btn-info">Добавить товар</a></p> 
+        <p><a href="/categories/" class="btn btn-info">Список категорий</a></p> 
+    </div>
+{% endblock %}

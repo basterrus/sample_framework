@@ -1,0 +1,40 @@
+{% extends "basetemplate.html" %}
+
+{% block title %}Список категорий товаров{% endblock %}
+
+{% block style %}{% include "includes/inc_style_css.html" %}{% endblock %}
+
+{% block menu %}{% include "includes/inc_menu.html" %}{% endblock %}
+
+{% block content %}
+    <h1 class="pt-5">Список категорий</h1>
+
+    <table class="table mt-5">
+        <thead>
+        <tr>
+            <th scope="col">id</th>
+            <th scope="col">Наименование</th>
+            <th scope="col">Просмотр категории</th>
+            <th scope="col">Добавить</th>
+            <th scope="col">Удалить</th>
+{#            <th></th>#}
+        </tr>
+        </thead>
+        {% for item in objects_list %}
+            <tr>
+                <th scope="row">{{ item.id }}</th>
+                <td><a href="/products/?id={{ item.id }}">{{ item.name }}</a></td>
+                <td><a class="btn btn-primary" href="/products/?id={{ item.id }}">Перейти</a></td>
+                <td><button class="btn btn-primary"><a class="text-white text-decoration-none" href="/products/add/?id={{item.id}}">Добавить товар</a></button></td>
+                <td><button class="btn btn-danger"><a class="text-white text-decoration-none" href="#">Удалить</a></button></td>
+
+            </tr>
+        {% endfor %}
+    </table>
+
+
+    <div class="d-flex">
+        <p><a href="/categories/add/" class="btn btn-info" >Добавить категорию</a></p> 
+        <p><a href="/" class="btn btn-info" >Главная</a></p>
+    </div>
+{% endblock %}
