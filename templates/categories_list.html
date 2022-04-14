@@ -15,6 +15,7 @@
             <th scope="col">id</th>
             <th scope="col">Наименование</th>
             <th scope="col">Просмотр категории</th>
+            <th scope="col">Количество товаров</th>
             <th scope="col">Добавить</th>
             <th scope="col">Удалить</th>
 {#            <th></th>#}
@@ -24,6 +25,7 @@
             <tr>
                 <th scope="row">{{ item.id }}</th>
                 <td><a href="/products/?id={{ item.id }}">{{ item.name }}</a></td>
+                <td>{{item.product_count() }}</td>
                 <td><a class="btn btn-primary" href="/products/?id={{ item.id }}">Перейти</a></td>
                 <td><button class="btn btn-primary"><a class="text-white text-decoration-none" href="/products/add/?id={{item.id}}">Добавить товар</a></button></td>
                 <td><button class="btn btn-danger"><a class="text-white text-decoration-none" href="#">Удалить</a></button></td>

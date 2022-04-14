@@ -1,4 +1,5 @@
 class Get:
+    """Класс GET запроса"""
 
     @staticmethod
     def parse_input_data(data: str):
@@ -18,6 +19,7 @@ class Get:
 
 
 class Post:
+    """Класс POST запроса"""
 
     @staticmethod
     def parse_input_data(data: str):
