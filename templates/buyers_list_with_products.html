@@ -1,0 +1,34 @@
+{% extends "basetemplate.html" %}
+
+{% block title %}Список покупателей{% endblock %}
+
+{% block style %}{% include "includes/inc_style_css.html" %}{% endblock %}
+
+{% block menu %}{% include "includes/inc_menu.html" %}{% endblock %}
+
+{% block content %}
+
+    <div class="mt-4 ">
+        <h3>Продать товар покупателю</h3>
+        <form method="post">
+        <p>Выберите покупателя</p>
+            <select name="buyer_name" class="col-6">
+                {% for item in buyers %}
+                    <option value="{{ item.name }}">{{ item.name }}</option>
+                {% endfor %}
+            </select>
+        <p>Выберете товар</p>
+            <select name="product_name" class="col-6">
+                {% for item in products %}
+                    <option value="{{ item.name }}">{{ item.name }}</option>
+                {% endfor %}
+            </select>
+            <p></p>
+            <button class="btn btn-primary col-6" type="submit">Продать</button>
+        </form>
+    </div>
+    <div>
+        <br>
+        <a class="btn btn-primary col-6" href="/buyers/">Список покупателей</a>
+    </div>
+{% endblock %}

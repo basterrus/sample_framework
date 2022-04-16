@@ -1,9 +1,12 @@
 from framework.templator import render
+from patterns.behavioral_patterns import BaseSerializer, EmailNotifier, SmsNotifier, ListView, CreateView
 from patterns.сreational_patterns import Engine, Logger
 from patterns.structural_patterns import Route, Debug
 
 engine = Engine()
 logger = Logger('main')
+email_notifier = EmailNotifier()
+sms_notifier = SmsNotifier()
 routes = {}
 
 
@@ -69,7 +72,8 @@ class CreateCategory:
                 category = engine.find_category_by_id(int(category_id))
 
             new_category = engine.create_category(name, category)
-
+            # new_category.observers.append(email_notifier)
+            # new_category.observers.append(sms_notifier)
             engine.categories.append(new_category)
 
             return '200 OK', render('categories_list.html', objects_list=engine.categories)
@@ -84,7 +88,7 @@ class ProductsList:
 
     @Debug(name='ProductsList')
     def __call__(self, request):
-        logger.log('Список курсов')
+        logger.log('Список продуктов')
 
         try:
             category = engine.find_category_by_id(int(request['request_params']['id']))
@@ -93,7 +97,18 @@ class ProductsList:
                                     name=category.name,
                                     id=category.id)
         except KeyError:
-            return '200 OK', 'No courses have been added yet'
+            return '200 OK', 'No products have been added yet'
+
+
+@Route(routes=routes, url='/products/list/')
+class ProductsList:
+    """Класс списка товаров"""
+
+    @Debug(name='ProductsList')
+    def __call__(self, request):
+        logger.log('Список продуктов')
+        products = engine.products
+        return '200 OK', render('products_list.html', objects_list=products)
 
 
 @Route(routes=routes, url='/products/add/')
@@ -114,6 +129,10 @@ class CreateProducts:
             if self.category_id != -1:
                 category = engine.find_category_by_id(int(self.category_id))
                 new_products = engine.create_product('product', name, category)
+
+                # new_products.observers.append(email_notifier)
+                # new_products.observers.append(sms_notifier)
+
                 engine.products.append(new_products)
 
             return '200 OK', render('products_list.html',
@@ -130,12 +149,12 @@ class CreateProducts:
                                         name=category.name,
                                         id=category.id)
             except KeyError:
-                return '200 OK', 'No categories have been added yet'
+                return '200 OK', 'No products have been added yet'
 
 
 @Route(routes, url='/products/copy/')
 class CopyProduct:
-    """Copy"""
+    """Класс копирования продукта"""
 
     @Debug(name='CopyProduct')
     def __call__(self, request):
@@ -156,8 +175,61 @@ class CopyProduct:
                                     objects_list=engine.products,
                                     name=new_product.category.name)
         except KeyError:
-            return '200 OK', 'No courses have been added yet'
+            return '200 OK', 'No products have been added yet'
 
 
 def not_found_404_view(request):
     return '404 WHAT', [b'404 not found!']
+
+
+@Route(routes=routes, url='/api/')
+class ProductApi:
+    """Класс API Views"""
+
+    @Debug(name='ProductApi')
+    def __call__(self, request):
+        return '200 OK', BaseSerializer(engine.products).save()
+
+
+@Route(routes=routes, url='/buyers/')
+class BuyersListView(ListView):
+    queryset = engine.buyers
+    template_name = 'buyers_list.html'
+
+    def get_context_data(self):
+        context = super().get_context_data()
+        context['products'] = engine.products
+        context['buyers'] = engine.buyers
+        return context
+
+
+@Route(routes=routes, url='/buyers/create/')
+class StudentCreateView(CreateView):
+    template_name = 'create_buyers.html'
+
+    def create_obj(self, data: dict):
+        name = data['name']
+        name = engine.decode_value(name)
+        new_obj = engine.create_user('buyer', name)
+        engine.buyers.append(new_obj)
+
+
+@Route(routes=routes, url='/buyers/add/')
+class CreateBuyersViews(CreateView):
+    queryset = engine.buyers
+    template_name = 'buyers_list_with_products.html'
+
+    def get_context_data(self):
+        context = super().get_context_data()
+        context['products'] = engine.products
+        context['buyers'] = engine.buyers
+        return context
+
+    def create_obj(self, data: dict):
+        product_name = data['product_name']
+        product_name = engine.decode_value(product_name)
+        product = engine.get_product(product_name)
+        buyer_name = data['buyer_name']
+        buyer_name = engine.decode_value(buyer_name)
+        buyer = engine.get_buyer(buyer_name)
+        product.add_buyer(buyer)

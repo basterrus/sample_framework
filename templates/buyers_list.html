@@ -1,0 +1,44 @@
+{% extends "basetemplate.html" %}
+
+{% block title %}Список покупателей{% endblock %}
+
+{% block style %}{% include "includes/inc_style_css.html" %}{% endblock %}
+
+{% block menu %}{% include "includes/inc_menu.html" %}{% endblock %}
+
+{% block content %}
+    <div class="border">
+        <h1 class="pt-2">Список покупателей</h1>
+
+        <table class="table mt-5">
+            <thead>
+            <tr>
+                <th scope="col">id</th>
+                <th scope="col">Имя покупателя</th>
+                <th scope="col">Купленные товары</th>
+            </tr>
+            </thead>
+
+            {% for item in objects_list %}
+                <tr>
+                    <th scope="row">{{ item.id }}</th>
+                    <td>{{ item.name }}</td>
+                    <td>{% for product in item.products %}
+                            {{ product.name }}
+                        {% endfor %}</td>
+                </tr>
+            {% endfor %}
+
+        </table>
+
+
+        <div class="d-flex">
+            <p><a href="/" class="btn btn-info">Главная</a></p> 
+            <p><a href="/buyers/create/" class="btn btn-info">Добавить покупателя</a></p> 
+            <p><a href="/buyers/add/" class="btn btn-info">Продать товар</a></p> 
+
+        </div>
+    </div>
+
+
+{% endblock %}

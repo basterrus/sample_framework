@@ -1,8 +1,5 @@
 import quopri
 from framework.requests import Get, Post
-from patterns.сreational_patterns import Logger
-
-logger = Logger('core')
 
 
 class HelloFromFake201:
@@ -13,7 +10,6 @@ class HelloFromFake201:
 
 class PageNotFound404:
     def __call__(self, request):
-        logger.log("Page not found")
         return '404 WHAT', '404 PAGE Not Found'
 
 
@@ -41,12 +37,12 @@ class Application:
         if method == 'POST':
             data = Post().get_request_params(environ)
             request['data'] = data
-            logger.log(f'POST-запрос: {Application.decode_value(data)}')
+            print(f'POST-запрос: {Application.decode_value(data)}')
 
         if method == 'GET':
             request_params = Get().get_request_params(environ)
             request['request_params'] = request_params
-            logger.log(f'GET-запрос: {request_params}')
+            print(f'GET-запрос: {request_params}')
 
         if path in self.routes_lst:
             view = self.routes_lst[path]

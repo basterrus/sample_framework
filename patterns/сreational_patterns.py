@@ -1,15 +1,25 @@
 from copy import deepcopy
 from quopri import decodestring
 
+import self as self
 
-class User:
+from patterns.behavioral_patterns import Subject, LogWriter
+
+
+class User(Subject):
     """Класс абстрактного пользователя"""
-    pass
+
+    def __init__(self, name):
+        super().__init__()
+        self.name = name
 
 
 class Buyer(User):
     """Класс покупателя"""
-    pass
+
+    def __init__(self, name):
+        self.products = []
+        super().__init__(name)
 
 
 class Seller(User):
@@ -25,8 +35,8 @@ class UserFactory:
     }
 
     @classmethod
-    def create(cls, type_):
-        return cls.types[type_]()
+    def create(cls, type_, name):
+        return cls.types[type_](name)
 
 
 class ProductPrototype:
@@ -36,18 +46,27 @@ class ProductPrototype:
         return deepcopy(self)
 
 
-class Product(ProductPrototype):
+class Product(ProductPrototype, Subject):
     """Класс продукта"""
 
     def __init__(self, name, category):
+        super().__init__()
         self.name = name
         self.category = category
         self.category.products.append(self)
+        self.buyer = []
+
+    def __getitem__(self, item):
+        return self.buyer[item]
+
+    def add_buyer(self, buyer: Buyer):
+        self.buyer.append(buyer)
+        buyer.products.append(self)
+        self.notify()
 
 
 class AbstractProduct(Product):
     """Класс абстрактного продукта"""
-    pass
 
 
 class ProductFactory:
@@ -60,12 +79,13 @@ class ProductFactory:
         return cls.types[type_](name, category)
 
 
-class Category:
+class Category(Subject):
     """Класс категорий"""
 
     auto_id = 0
 
     def __init__(self, name, category):
+        super().__init__()
         self.id = Category.auto_id
         Category.auto_id += 1
         self.name = name
@@ -89,8 +109,8 @@ class Engine:
         self.categories = []
 
     @staticmethod
-    def create_user(type_):
-        return UserFactory.create(type_)
+    def create_user(type_, name):
+        return UserFactory.create(type_, name)
 
     @staticmethod
     def create_category(name, category=None):
@@ -98,7 +118,7 @@ class Engine:
 
     def find_category_by_id(self, id):
         for item in self.categories:
-            log('item', item.id)
+            print('item', item.id)
             if item.id == id:
                 return item
         raise Exception(f'Категория с заданным id = {id} не найдена!')
@@ -119,6 +139,11 @@ class Engine:
             if product_.id == id:
                 return product_
         raise Exception(f'Продукт с заданным id= {id} не найден!')
+
+    def get_buyer(self, name) -> Buyer:
+        for item in self.buyers:
+            if item.name == name:
+                return item
 
     @staticmethod
     def decode_value(val):
@@ -149,9 +174,10 @@ class SingletonByName(type):
 
 class Logger(metaclass=SingletonByName):
 
-    def __init__(self, name):
+    def __init__(self, name, writer=LogWriter()):
         self.name = name
+        self.writer = writer
 
-    @staticmethod
-    def log(text):
+    def log(self, text):
         print('log->', text)
+        self.writer.write(text)
