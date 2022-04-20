@@ -9,7 +9,10 @@
 {% block content %}
     <h1 class="pt-5">Добавить покупателя</h1>
     <form method="post" class="mt-5">
-        <input type="text" name="name" placeholder="Имя покупателя" class="col-4">
-        <button type="submit" class="btn btn-primary">Сохранить</button>
+
+        <p><input type="text" name="username" placeholder="username" class="col-4"></p>
+        <p><input type="text" name="first_name" placeholder="Имя покупателя" class="col-4"></p>
+        <p><input type="text" name="last_name" placeholder="Фамилия покупателя" class="col-4"></p>
+        <button type="submit" class="btn btn-primary col-4">Сохранить</button>
     </form>
 {% endblock %}

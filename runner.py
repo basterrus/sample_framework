@@ -1,7 +1,7 @@
 from datetime import datetime
 from wsgiref.simple_server import make_server
 
-from patterns.сreational_patterns import Logger
+from framework.patterns.сreational_patterns import Logger
 from urls import fronts
 from framework import Application
 from views import routes

@@ -24,8 +24,10 @@
         {% for item in objects_list %}
             <tr>
                 <th scope="row">{{ item.id }}</th>
-                <td><a href="/products/?id={{ item.id }}">{{ item.name }}</a></td>
-                <td>{{item.product_count() }}</td>
+{#                <td><a href="/products/?id={{ item.id }}">{{ item.name}}</a></td>#}
+                <td>{{ item.name}}</td>
+               <td></td>
+{#                <td>{{item.product_count() }}</td>#}
                 <td><a class="btn btn-primary" href="/products/?id={{ item.id }}">Перейти</a></td>
                 <td><button class="btn btn-primary"><a class="text-white text-decoration-none" href="/products/add/?id={{item.id}}">Добавить товар</a></button></td>
                 <td><button class="btn btn-danger"><a class="text-white text-decoration-none" href="#">Удалить</a></button></td>

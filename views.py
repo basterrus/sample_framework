@@ -1,12 +1,15 @@
+from framework.patterns.unit_of_work import UnitOfWork
 from framework.templator import render
-from patterns.behavioral_patterns import BaseSerializer, EmailNotifier, SmsNotifier, ListView, CreateView
-from patterns.сreational_patterns import Engine, Logger
-from patterns.structural_patterns import Route, Debug
+from framework.patterns.behavioral_patterns import BaseSerializer, EmailNotifier, SmsNotifier, ListView, CreateView
+from framework.patterns.сreational_patterns import Engine, Logger, MapperRegistry
+from framework.patterns.structural_patterns import Route, Debug
 
 engine = Engine()
 logger = Logger('main')
 email_notifier = EmailNotifier()
 sms_notifier = SmsNotifier()
+UnitOfWork.new_current()
+UnitOfWork.get_current().set_mapper_registry(MapperRegistry)
 routes = {}
 
 
@@ -37,22 +40,23 @@ class About:
 
 
 @Route(routes=routes, url='/contacts/')
+@Debug(name='Contacts')
 class Contacts:
     """Класс страницы контакты"""
 
-    @Debug(name='Contacts')
     def __call__(self, request):
         return '200 OK', render('contacts.html')
 
 
 @Route(routes=routes, url='/categories/')
-class CategoriesList:
-    """Класс списка категорий"""
+@Debug(name='CategoryList')
+class CategoriesListView(ListView):
+    queryset = engine.categories
+    template_name = 'categories_list.html'
 
-    @Debug(name='CategoryList')
-    def __call__(self, request):
-        logger.log('Список категорий')
-        return '200 OK', render('categories_list.html', objects_list=engine.categories)
+    def get_queryset(self):
+        mapper = MapperRegistry.get_current_mapper('categories')
+        return mapper.all()
 
 
 @Route(routes=routes, url='/categories/add/')
@@ -75,6 +79,8 @@ class CreateCategory:
             # new_category.observers.append(email_notifier)
             # new_category.observers.append(sms_notifier)
             engine.categories.append(new_category)
+            new_category.mark_new()
+            UnitOfWork.get_current().commit()
 
             return '200 OK', render('categories_list.html', objects_list=engine.categories)
         else:
@@ -83,36 +89,31 @@ class CreateCategory:
 
 
 @Route(routes=routes, url='/products/')
-class ProductsList:
+@Debug(name='ProductsList')
+class ProductsList(ListView):
     """Класс списка товаров"""
+    queryset = engine.products
+    template_name = 'products_list.html'
 
-    @Debug(name='ProductsList')
-    def __call__(self, request):
-        logger.log('Список продуктов')
-
-        try:
-            category = engine.find_category_by_id(int(request['request_params']['id']))
-            return '200 OK', render('products_list.html',
-                                    objects_list=category.products,
-                                    name=category.name,
-                                    id=category.id)
-        except KeyError:
-            return '200 OK', 'No products have been added yet'
+    def get_queryset(self):
+        mapper = MapperRegistry.get_current_mapper('products')
+        return mapper.all()
 
 
-@Route(routes=routes, url='/products/list/')
-class ProductsList:
-    """Класс списка товаров"""
-
-    @Debug(name='ProductsList')
-    def __call__(self, request):
-        logger.log('Список продуктов')
-        products = engine.products
-        return '200 OK', render('products_list.html', objects_list=products)
+#
+# @Route(routes=routes, url='/products/list/')
+# @Debug(name='ProductsList')
+# class ProductsList:
+#     """Класс списка товаров"""
+#
+#     def __call__(self, request):
+#         logger.log('Список продуктов')
+#         products = engine.products
+#         return '200 OK', render('products_list.html', objects_list=products)
 
 
 @Route(routes=routes, url='/products/add/')
-class CreateProducts:
+class ProductsCreate:
     """Класс создания товаров"""
 
     category_id = -1
@@ -124,9 +125,9 @@ class CreateProducts:
             data = request['data']
             name = data['name']
             name = engine.decode_value(name)
-
+            category_id = data.get('category_id')
             category = None
-            if self.category_id != -1:
+            if category_id:
                 category = engine.find_category_by_id(int(self.category_id))
                 new_products = engine.create_product('product', name, category)
 
@@ -134,6 +135,9 @@ class CreateProducts:
                 # new_products.observers.append(sms_notifier)
 
                 engine.products.append(new_products)
+
+                new_products.mark_new()
+                UnitOfWork.get_current().commit()
 
             return '200 OK', render('products_list.html',
                                     objects_list=category.products,
@@ -153,7 +157,7 @@ class CreateProducts:
 
 
 @Route(routes, url='/products/copy/')
-class CopyProduct:
+class ProductCopy:
     """Класс копирования продукта"""
 
     @Debug(name='CopyProduct')
@@ -196,22 +200,27 @@ class BuyersListView(ListView):
     queryset = engine.buyers
     template_name = 'buyers_list.html'
 
-    def get_context_data(self):
-        context = super().get_context_data()
-        context['products'] = engine.products
-        context['buyers'] = engine.buyers
-        return context
+    def get_queryset(self):
+        mapper = MapperRegistry.get_current_mapper('buyers')
+        return mapper.all()
 
 
 @Route(routes=routes, url='/buyers/create/')
-class StudentCreateView(CreateView):
+class BuyerCreateView(CreateView):
     template_name = 'create_buyers.html'
 
     def create_obj(self, data: dict):
-        name = data['name']
-        name = engine.decode_value(name)
-        new_obj = engine.create_user('buyer', name)
+        username = data['username']
+        username = engine.decode_value(username)
+        first_name = data['first_name']
+        first_name = engine.decode_value(first_name)
+        last_name = data['last_name']
+        last_name = engine.decode_value(last_name)
+
+        new_obj = engine.create_user('buyers', username, first_name, last_name)
         engine.buyers.append(new_obj)
+        new_obj.mark_new()
+        UnitOfWork.get_current().commit()
 
 
 @Route(routes=routes, url='/buyers/add/')

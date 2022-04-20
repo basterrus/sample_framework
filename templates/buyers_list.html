@@ -14,7 +14,9 @@
             <thead>
             <tr>
                 <th scope="col">id</th>
+                <th scope="col">username</th>
                 <th scope="col">Имя покупателя</th>
+                <th scope="col">Фамилия покупателя</th>
                 <th scope="col">Купленные товары</th>
             </tr>
             </thead>
@@ -22,7 +24,9 @@
             {% for item in objects_list %}
                 <tr>
                     <th scope="row">{{ item.id }}</th>
-                    <td>{{ item.name }}</td>
+                    <td>{{ item.username }}</td>
+                    <td>{{ item.first_name }}</td>
+                    <td>{{ item.last_name }}</td>
                     <td>{% for product in item.products %}
                             {{ product.name }}
                         {% endfor %}</td>
