@@ -25,5 +25,6 @@ ___
 1. Клонировать репозиторий `https://github.com/basterrus/sample_framework.git` 
 2. Перейти (при необходимости) в папку с фреймворком `cd sample_framework`
 3. Выполнить команду `python runner.py `
+4. Проект доступен по адресу: `http://127.0.0.1:8000/`
 ___
 ![img](img/Screenshot_10.png)
