@@ -22,8 +22,8 @@ ___
       - разработан класс UnitOfWork - отслеживает изменения данных и запускает изменения в БД
 ___
 ## Запуск проекта:
-1. Клонировать репозиторий `https://github.com/basterrus/Sample_framework.git` 
-2. Перейти (при необходимости) в папку с фреймворком `cd Sample_framework`
+1. Клонировать репозиторий `https://github.com/basterrus/sample_framework.git` 
+2. Перейти (при необходимости) в папку с фреймворком `cd sample_framework`
 3. Выполнить команду `python runner.py `
 ___
 ![img](img/Screenshot_10.png)
