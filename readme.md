@@ -26,4 +26,4 @@ ___
 2. Перейти (при необходимости) в папку с фреймворком `cd Sample_framework`
 3. Выполнить команду `python runner.py `
 ___
-<img src="img/Screenshot_10.png" width="400" height="250">
+![img](img/Screenshot_10.png)
